@@ -1,7 +1,7 @@
 """
 Basic OP_RETURN data storage tool for SmartChain functions.
 Author: Tim M. (TM2013)
-Co-contributor: Bitkapp
+Co-contributor: Bitkapp (aka alaniz)
 Organization: Project Radon
 Date: 2/17/2016
 
@@ -108,7 +108,10 @@ class Document():
             raise Exception("No proper inputs!")
 
     def split_inputs(self, split_qty, input_address_split):
-        for i in range(int(split_qty)):
+        if int(split_qty) != 0:
+            for i in range(int(split_qty)):
+                self.rpc.sendtoaddress(input_address_split, 0.001)
+        else:
             self.rpc.sendtoaddress(input_address_split, 0.001)
 
 class Search():
@@ -124,8 +127,8 @@ class Search():
         tx_qty = len(data_ID) - int(math.floor(len(data_ID)/12.0) * 12)
         tx_in_ID = data_ID[tx_qty:len(data_ID)]
         tx_in_ID = list(tx_in_ID[0+i:12+i] for i in range(0, len(tx_in_ID), 12))
-        self.blockNumber = int(data_ID[0:tx_qty])
-        self.transaction_search(self.blockNumber, tx_in_ID)
+        blockNumber = int(data_ID[0:tx_qty])
+        self.transaction_search(blockNumber, tx_in_ID)
 
     def transaction_search(self, number, txns):
         prev_block_data = self.rpc.getblockbynumber(int(number)-1)
@@ -144,6 +147,7 @@ class Search():
             for tx in next_block_data["tx"]:
                 if s == tx[:12]:
                     transactions.append(tx)
+
         for txn in transactions:
             tx_data = self.rpc.gettransaction(txn)
             for data in tx_data["vout"]:
@@ -159,3 +163,4 @@ class Search():
 
 #s = Search()
 #s.get_data("Some data ID")
+

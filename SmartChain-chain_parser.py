@@ -31,7 +31,6 @@ class DataBase():
 		# Initialise database and RPC connection
 		self.loadSync()
 		self.rpc = AuthServiceProxy(("http://%s:%s@127.0.0.1:%s/") % (rpc_user, rpc_pass, rpc_port))
-		self.save_time = time.time()
 
 	def saveSync(self):
 		# Dump database into a pickle
@@ -59,6 +58,14 @@ class DataBase():
 					self.block_data[block] = self.rpc.getblockbynumber(block)["tx"]
 		except KeyboardInterrupt as e:
 			self.saveSync()
+
+	def returnBlock(self, blocknumber):
+		# Returns block data from database for a particular block
+		try:
+			block = self.block_data[blocknumber]
+			return block
+		except KeyError as e:
+			raise KeyError('Local database is not synced to required block height.')
 
 #d = DataBase()
 #d.syncFromLastBlock()

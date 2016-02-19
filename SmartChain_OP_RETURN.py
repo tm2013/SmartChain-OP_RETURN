@@ -128,7 +128,7 @@ class Search():
         tx_in_ID = data_ID[tx_qty:len(data_ID)]
         tx_in_ID = list(tx_in_ID[0+i:12+i] for i in range(0, len(tx_in_ID), 12))
         blockNumber = int(data_ID[0:tx_qty])
-        self.transaction_search(blockNumber, tx_in_ID)
+        return self.transaction_search(blockNumber, tx_in_ID)
 
     def transaction_search(self, number, txns):
         prev_block_data = self.rpc.getblockbynumber(int(number)-1)

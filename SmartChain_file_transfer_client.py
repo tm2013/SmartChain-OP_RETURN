@@ -35,9 +35,12 @@ class Client():
 		# Request directory listing
 		url = self.make_url(self.ip, self.port, '/')
 		file_list = urllib2.urlopen(url).read()
+		files = []
 		print 'Files from server:'
 		for filename in file_list.splitlines():
+			files.append(filename)
 		    print '- {}'.format(filename)
+		return files
 
 	def requestFileContents(self, filename):
 		# Request contents of a file

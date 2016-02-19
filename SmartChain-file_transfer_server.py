@@ -1,3 +1,14 @@
+"""
+Basic file transfer server for SmartChain functions.
+Author: Tim M. (TM2013)
+Co-Author: Bitkapp (aka alaniz)
+Organization: Project Radon
+Date: 2/19/2016
+
+Requirements:
+HTTP Connection
+"""
+
 from BaseHTTPServer import HTTPServer, BaseHTTPRequestHandler
 import os
 

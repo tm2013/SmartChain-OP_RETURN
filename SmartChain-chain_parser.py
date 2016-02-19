@@ -23,8 +23,8 @@ if debug:
 
 # RPC Configuration
 rpc_user = "user"
-rpc_pass = "password"
-rpc_port = "16663"
+rpc_pass = "pass"
+rpc_port = "port"
 
 class DataBase():
 	def __init__(self):
@@ -67,6 +67,6 @@ class DataBase():
 		except KeyError as e:
 			raise KeyError('Local database is not synced to required block height.')
 
-d = DataBase()
-d.syncFromLastBlock()
+#d = DataBase()
+#d.syncFromLastBlock()
 #d.saveSync()

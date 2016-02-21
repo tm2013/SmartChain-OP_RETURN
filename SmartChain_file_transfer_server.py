@@ -79,4 +79,4 @@ class Server():
         while running:
             server.handle_request()
 
-#s = Server()
+s = Server()

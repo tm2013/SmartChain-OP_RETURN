@@ -121,6 +121,14 @@ class Search():
 
     # Gather the data stored from a specific data ID
     def get_data(self, data_ID):
+        try:
+            data = pickle.load(open('ID_DATA.p', 'rb'))
+            return data[data_ID]
+        except IOError as e:
+            data = store_data(data_ID)
+            return data
+
+    def store_data(self, data_ID):
         # Check if there are inputs
         if not data_ID or not len(data_ID) > 12:
             raise Exception("Please enter a valid data ID.")
@@ -128,7 +136,17 @@ class Search():
         tx_in_ID = data_ID[tx_qty:len(data_ID)]
         tx_in_ID = list(tx_in_ID[0+i:12+i] for i in range(0, len(tx_in_ID), 12))
         blockNumber = int(data_ID[0:tx_qty])
-        return self.transaction_search(blockNumber, tx_in_ID)
+        content = self.transaction_search(blockNumber, tx_in_ID)
+
+        try:
+            data = pickle.load(open('ID_DATA.p', 'rb'))
+            data[data_ID] = content
+            pickle.dump(data, open('ID_DATA.p', 'wb'))
+        except IOError as e:
+            data = {data_ID : content}
+            pickle.dump(data, open('ID_DATA.p', 'wb'))
+
+        return content          
 
     def transaction_search(self, number, txns):
         prev_block_data = self.rpc.getblockbynumber(int(number)-1)

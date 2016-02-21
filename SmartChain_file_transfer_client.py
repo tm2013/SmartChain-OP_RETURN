@@ -39,7 +39,7 @@ class Client():
 		print 'Files from server:'
 		for filename in file_list.splitlines():
 			files.append(filename)
-		    print '- {}'.format(filename)
+			print '- {}'.format(filename)
 		return files
 
 	def requestFileContents(self, filename):
@@ -54,7 +54,7 @@ class Client():
 		url = self.make_url(self.ip, self.port, filename)
 		f = urllib2.urlopen(url, data=contents)
 
-#c = Client('IP Address', 9000)
-#c.uploadFile('Test text', 'test.txt')
-#c.requestDirList()
-#c.requestFileContents('test.txt')
+c = Client('173.170.69.31', 9000)
+c.uploadFile('Test text', 'test2.txt')
+c.requestDirList()
+c.requestFileContents('test.txt')

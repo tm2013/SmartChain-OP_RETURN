@@ -74,6 +74,15 @@ class Server():
         elif not os.path.isfile(os.getcwd()+'/data'+'/nodes.p'):
             nodes = {}
             pickle.dump(nodes, open( "data/nodes.p", "wb" ))
+            if not os.path.isfile(os.getcwd()+'/data'+'/data.p'):
+                data = {}
+                pickle.dump(data, open( "data/data.p", "wb" ))
+                self.startServer()
+            else:
+                self.startServer()
+        elif not os.path.isfile(os.getcwd()+'/data'+'/data.p'):
+            data = {}
+            pickle.dump(data, open( "data/data.p", "wb" ))
             self.startServer()
         else:
             self.startServer()

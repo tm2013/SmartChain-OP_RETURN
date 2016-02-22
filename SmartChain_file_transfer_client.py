@@ -77,12 +77,12 @@ class Client():
         authentication_key = str(authentication_key)
         return authentication_key
 
-    def shred_file(self, authkey, file_path):
+    def shred_file(self, authkey, splitBytes=10, file_path):
         with open(str(file_path), 'rb') as f:
             content = f.read()
         content = hexlify(content)
         file_data = encrypt(authkey, content)
-        file_data = list(file_data[0+i:10+i] for i in range(0, len(file_data), 10))
+        file_data = list(file_data[0+i:splitBytes+i] for i in range(0, len(file_data), splitBytes))
         return file_data
 
 
@@ -91,4 +91,4 @@ class Client():
 # c.requestDirList()
 # c.requestFileContents('test.txt')
 # key = c.authenticateAs("hello world", 10)
-# c.shred_file(key, 'README.md')
+# c.shred_file(key, 100, 'README.md')

@@ -14,6 +14,9 @@ import urlparse
 import os
 import time
 import pickle
+from hashlib import sha256
+from simplecrypt import encrypt, decrypt
+from binascii import hexlify, unhexlify
 
 class Client():
     # Client class for file transfer HTTP server
@@ -66,10 +69,22 @@ class Client():
         url = self.make_url(self.ip, self.port, filename)
         f = urllib2.urlopen(url, data=contents)
 
-    #def discoverNodes(self, SEED_NODES):
+    def authenticateAs(self, secret_key):
+        authentication_key = str(sha256(secret_key))
+        return authentication_key
+
+    def shred_file(self, authkey, file_path):
+        with open(str(file_path), 'rb') as f:
+            content = f.read()
+        content = hexlify(content)
+        file_data = encrypt(authkey, content)
+        file_data = list(file_data[0+i:10+i] for i in range(0, len(file_data), 10))
+        return file_data
 
 
-# c = Client()
+c = Client()
 # c.uploadFile('Test text', 'test.txt')
 # c.requestDirList()
 # c.requestFileContents('test.txt')
+# key = c.authenticateAs("hello world")
+# print c.shred_file(key, 'README.md')

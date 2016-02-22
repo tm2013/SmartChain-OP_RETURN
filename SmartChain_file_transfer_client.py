@@ -69,8 +69,12 @@ class Client():
         url = self.make_url(self.ip, self.port, filename)
         f = urllib2.urlopen(url, data=contents)
 
-    def authenticateAs(self, secret_key):
-        authentication_key = str(sha256(secret_key))
+    def authenticateAs(self, secret_key, pin):
+        if not type(pin) == int:
+            raise Exception("The PIN you provided is not a vaild number, please try again.")
+        for i in range(pin):
+            authentication_key = sha256(secret_key)
+        authentication_key = str(authentication_key)
         return authentication_key
 
     def shred_file(self, authkey, file_path):
@@ -82,9 +86,9 @@ class Client():
         return file_data
 
 
-c = Client()
+# c = Client()
 # c.uploadFile('Test text', 'test.txt')
 # c.requestDirList()
 # c.requestFileContents('test.txt')
-# key = c.authenticateAs("hello world")
-# print c.shred_file(key, 'README.md')
+# key = c.authenticateAs("hello world", 10)
+# c.shred_file(key, 'README.md')

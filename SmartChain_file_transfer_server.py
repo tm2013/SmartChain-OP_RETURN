@@ -11,10 +11,12 @@ HTTP Connection
 
 from BaseHTTPServer import HTTPServer, BaseHTTPRequestHandler
 import os
+import pickle
 
 class Handler(BaseHTTPRequestHandler):
     def do_GET(self):
         global running
+        print self.client_address[0]
         if self.path == '/':
             self.list_files()
         elif self.path.startswith('/quit'):
@@ -62,13 +64,17 @@ class Handler(BaseHTTPRequestHandler):
             # If no files are found send 404
             self.send_response(404)
             self.send_header('Content-Type', 'text/plain')
-            self.end_headers()  
+            self.end_headers()
 
 class Server():
     def __init__(self):
         # Check if ./data directory exists and start server
         if not os.path.isdir(os.getcwd()+'/data'):
             raise Exception('You must create a directory ./data to start server.')
+        elif not os.path.isfile(os.getcwd()+'/data'+'/nodes.p'):
+            nodes = {}
+            pickle.dump(nodes, open( "data/nodes.p", "wb" ))
+            self.startServer()
         else:
             self.startServer()
 

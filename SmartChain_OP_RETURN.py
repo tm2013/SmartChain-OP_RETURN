@@ -30,9 +30,9 @@ if debug:
 
 
 # RPC Configuration
-rpc_user = "x"
-rpc_pass = "meowchickens"
-rpc_port = "27914"
+rpc_user = "user"
+rpc_pass = "pass"
+rpc_port = "port"
 
 class Document():
     def __init__(self, data):

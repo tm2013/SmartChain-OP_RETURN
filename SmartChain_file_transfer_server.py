@@ -11,7 +11,10 @@ HTTP Connection
 
 from BaseHTTPServer import HTTPServer, BaseHTTPRequestHandler
 import os
-import pickle
+try:
+  import cPickle as pickle
+except:
+  import pickle
 
 class Handler(BaseHTTPRequestHandler):
     def do_GET(self):

@@ -19,8 +19,11 @@ from bitcoinrpc.authproxy import AuthServiceProxy, JSONRPCException
 import logging
 import time
 import math
-import pickle
 from binascii import hexlify, unhexlify
+try:
+  import cPickle as pickle
+except:
+  import pickle
 
 # Debug settings
 debug = True

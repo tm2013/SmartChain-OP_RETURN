@@ -13,7 +13,10 @@ An RPC-enabled client
 from bitcoinrpc.authproxy import AuthServiceProxy, JSONRPCException
 import logging
 import time
-import pickle
+try:
+  import cPickle as pickle
+except:
+  import pickle
 
 # Debug settings
 debug = True
@@ -50,7 +53,7 @@ class DataBase():
 		try:
 			if self.block_data:
 				last_block = max(self.block_data.keys())
-				for block in range(last_block, block_height):
+				for block in range(last_block+1, block_height):
 					self.block_data[block] = self.rpc.getblockbynumber(block)["tx"]
 			# Start new sync process if new database has been initialised
 			else:

@@ -30,9 +30,9 @@ if debug:
 
 
 # RPC Configuration
-rpc_user = "user"
-rpc_pass = "pass"
-rpc_port = "port"
+rpc_user = "x"
+rpc_pass = "meowchickens"
+rpc_port = "27914"
 
 class Document():
     def __init__(self, data):
@@ -177,9 +177,29 @@ class Search():
         print processed_data
         return processed_data
 
+class Multisig():
+    def __init__(self):
+        # RPC Connection
+        self.rpc = AuthServiceProxy(("http://%s:%s@127.0.0.1:%s/") % (rpc_user, rpc_pass, rpc_port))
+        self.defaultEscrow = "03f50ead9ba3c59100cf2e8f4334f6a6cc949ce62a8c299f67b762c5d1698f5a97"
+
+    def multisig(self, nodePubKey, nRequired=2,):
+        return self.rpc.addmultisigaddress(nRequired, [self.defaultEscrow, nodePubKey])
+
+    def validateMultisig(self, multisigAddress, nodePubKey, nRequired=2):
+        validateAddress = self.rpc.validateaddress(multisigAddress)
+        if multisigAddress[0] == "Q" and validateAddress["isvalid"] == True and validateAddress["isscript"] == True and validateAddress["script"] == "multisig" and validateAddress["addresses"][0] == self.rpc.validatepubkey(self.defaultEscrow)["address"] and validateAddress["addresses"][1] == self.rpc.validatepubkey(nodePubKey)["address"] and validateAddress["sigsrequired"] == nRequired:
+            return True
+        else:
+            return False
+
 #d = Document('Some data')
 #d.store_data("Some Radium address")
 
 #s = Search()
 #s.get_data("Some data ID")
+
+#m = Multisig()
+#m.multisig(Public key Provided by the Storage Node)
+#m.validateMultisig(Multisig address provided, public key provided by storage node)
 

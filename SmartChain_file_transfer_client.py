@@ -46,13 +46,13 @@ class Client():
             print '- {}'.format(filename)
         return files
 
-    def requestFileContents(self, filename, decrypted=True):
+    def requestFileContents(self, filename, downloadpath,  decrypted=True):
         # Request contents of a file
         url = self.make_url(self.ip, self.port, filename)
         contents = urllib2.urlopen(url).read()
         if decrypted:
             contents = decrypt(self.authentication_key, unhexlify(contents))
-            f = open(filename, 'wb')
+            f = open(downloadpath, 'wb')
             f.write(contents)
             f.close()
         else:

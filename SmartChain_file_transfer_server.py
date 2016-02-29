@@ -9,6 +9,7 @@ Requirements:
 HTTP Connection
 """
 
+import SmartChain_file_transfer_client
 from BaseHTTPServer import HTTPServer, BaseHTTPRequestHandler
 import os
 try:
@@ -74,19 +75,6 @@ class Server():
         # Check if ./data directory exists and start server
         if not os.path.isdir(os.getcwd()+'/data'):
             raise Exception('You must create a directory ./data to start server.')
-        elif not os.path.isfile(os.getcwd()+'/data'+'/nodes.p'):
-            nodes = {}
-            pickle.dump(nodes, open( "data/nodes.p", "wb" ))
-            if not os.path.isfile(os.getcwd()+'/data'+'/data.p'):
-                data = {}
-                pickle.dump(data, open( "data/data.p", "wb" ))
-                self.startServer()
-            else:
-                self.startServer()
-        elif not os.path.isfile(os.getcwd()+'/data'+'/data.p'):
-            data = {}
-            pickle.dump(data, open( "data/data.p", "wb" ))
-            self.startServer()
         else:
             self.startServer()
 

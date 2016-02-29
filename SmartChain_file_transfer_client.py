@@ -16,14 +16,16 @@ import time
 from hashlib import sha256
 from simplecrypt import encrypt, decrypt
 from binascii import hexlify, unhexlify
+from random import randint
+import SmartChain_OP_RETURN
 
 class Client():
     # Client class for file transfer HTTP server
-    def __init__(self):
+    def __init__(self, IP='127.0.0.1', PORT=9000):
         self.authentication_key = False
         # Define ip and port and check if connection exists
-        self.ip = '127.0.0.1'
-        self.port = 9000
+        self.ip = IP
+        self.port = PORT
         try:
             urllib2.urlopen(self.make_url(self.ip, self.port, '/'))
         except urllib2.URLError:
@@ -35,24 +37,25 @@ class Client():
         url = urlparse.urlunsplit((scheme, netloc, path, '', ''))
         return url
 
-    def requestDirList(self):
+    def requestDirList(self, PRINT=False):
         # Request directory listing
         url = self.make_url(self.ip, self.port, '/')
         file_list = urllib2.urlopen(url).read()
         files = []
-        print 'Files from server:'
-        for filename in file_list.splitlines():
-            files.append(filename)
-            print '- {}'.format(filename)
+        if PRINT:
+            print 'Files from server:'
+            for filename in file_list.splitlines():
+                files.append(filename)
+                print '- {}'.format(filename)
         return files
 
-    def requestFileContents(self, filename, downloadpath,  decrypted=True):
+    def requestFileContents(self, filename, decrypted=True):
         # Request contents of a file
         url = self.make_url(self.ip, self.port, filename)
         contents = urllib2.urlopen(url).read()
         if decrypted:
             contents = decrypt(self.authentication_key, unhexlify(contents))
-            f = open(downloadpath, 'wb')
+            f = open(filename, 'wb')
             f.write(contents)
             f.close()
         else:
@@ -81,6 +84,13 @@ class Client():
         file_data = str(hexlify(file_data))
         return file_data
 
+    def newStorageContract(self, changeAddress, extIP, extPORT, filepath, duration, pricePerServer):
+        title = hexlify(str(randint(100000,1000000)))
+        #SmartChain_OP_RETURN.Document("ICC"+extIP+":"+str(extPORT)+title).store_data(changeAddress)
+        contractData = '{"file":%s,"size":%d,"duration":%d,"price":%d}' % (os.path.basename(filepath), os.path.getsize(filepath), duration, float(pricePerServer))
+        url = self.make_url(self.ip, self.port, title+".txt")
+        f = urllib2.urlopen(url, data=contractData)
+
 # Start the client
 
 #c = Client()
@@ -97,3 +107,5 @@ class Client():
 # If you enter the False flag, it will return the encrypted data, rather than the decrypted data.
 
 #c.requestFileContents('')
+#Client().newStorageContract("VKEWRJvYBtjqarXuAhYaKFjvUMc2PugNMf", "173.170.69.31", 9000, "test.txt", 100, 1)
+Client().requestDirList()
